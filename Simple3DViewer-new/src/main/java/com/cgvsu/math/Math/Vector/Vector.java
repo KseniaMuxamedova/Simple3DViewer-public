@@ -13,6 +13,8 @@ public abstract class Vector {
 
     protected float[] vector;
 
+    protected float x = 0, y = 0, z = 0;
+
     public Vector(float[] vector, final int size) {
         if (vector.length == size) {
             this.vector = vector;
@@ -26,6 +28,7 @@ public abstract class Vector {
             this.vector = new float[0];
             this.size = 0;
         }
+        setXYZ();
     }
 
     static final float EPS = 1e-6f;
@@ -36,6 +39,28 @@ public abstract class Vector {
 
     public float[] getVector() {
         return vector;
+    }
+
+    private void setXYZ() {
+        if (size >= 2) {
+            this.x = vector[0];
+            this.y = vector[1];
+            if (size >= 3) {
+                this.z = vector[2];
+            }
+        }
+    }
+
+    public float getX() {
+        return vector[0];
+    }
+
+    public float getY() {
+        return vector[1];
+    }
+
+    public float getZ() {
+        return vector[2];
     }
 
     public void setData(float[] data) {
