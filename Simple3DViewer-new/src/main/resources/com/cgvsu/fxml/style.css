@@ -1,0 +1,102 @@
+.root {  black: #000000;
+         white: #FFFFFF;
+         lightGrey: #D2D2D2;
+         mintGreen: #B0FFA3;
+         }
+.background {-fx-background-color: white}
+
+.menuBackground {
+-fx-background-color: LightGrey;
+}
+
+.menu {
+-fx-background-color: LightGrey;
+-fx-font-family: "Monaco";
+-fx-text-background-color: mintGreen;
+}
+
+.menu:hover {
+-fx-background-color: mintGreen;
+-fx-font-family: "Monaco";
+-fx-text-background-color: black;
+}
+
+.menuItem {
+-fx-background-color: mintGreen;
+-fx-font-family: "Monaco";
+-fx-text-background-color: lightGrey;
+}
+
+.menuItem:hover{
+-fx-background-color: lightGrey;
+-fx-font-family: "Monaco";
+-fx-text-background-color: black;
+}
+.label{
+     -fx-text-alignment: CENTER;
+     -fx-font-family: "Monaco";
+}
+
+.check-box .box {
+	-fx-background-color: white;
+	-fx-border-color:  lightGrey;
+	-fx-border-radius: 0;
+}
+.check-box .box: hover {
+	-fx-background-color: mintGreen;
+}
+.check-box .mark {
+ 	-fx-shape: "M1.73,12.91 8.1,19.28 22.79,4.59 22.79,1.59 8.1,16.28 1.73,9.91";
+}
+.check-box:selected .mark {
+	-fx-background-color: black;
+}
+.check-box:selected .box {
+	-fx-background-color: mintGreen;
+}
+
+
+.combo-box-base {
+	-fx-background-color: white;
+	-fx-border-color:lightGrey;
+	-fx-background-radius: 0;
+	    -fx-font-family: "Monaco";
+}
+.combo-box-base:hover {
+	-fx-background-color: mintGreen;
+	    -fx-font-family: "Monaco";
+}
+.combo-box-base:disabled {
+	-fx-background-color: black;
+	    -fx-font-family: "Monaco";
+}
+.combo-box .list-cell {
+	-fx-text-fill: black;
+	    -fx-font-family: "Monaco";
+}
+.combo-box-base .arrow-button .arrow {
+	-fx-background-color: white;
+	    -fx-font-family: "Monaco";
+}
+/* WHILE OPEN */
+.combo-box-base:showing {
+	-fx-background-color: white;
+	-fx-border-color: lightGrey;
+	    -fx-font-family: "Monaco";
+}
+.combo-box .combo-box-popup .list-view .list-cell {
+	-fx-background-color: mintGreen;
+	    -fx-font-family: "Monaco";
+}
+.combo-box .combo-box-popup .list-view .list-cell:hover {
+	-fx-background-color: lightGrey;
+    -fx-font-family: "Monaco";
+    -fx-text-fill: white;
+}
+.combo-box .combo-box-popup .list-view .list-cell:selected {
+	-fx-background-color: mintGreen;
+    -fx-font-family: "Monaco";
+    -fx-text-fill: black;
+}
+
+

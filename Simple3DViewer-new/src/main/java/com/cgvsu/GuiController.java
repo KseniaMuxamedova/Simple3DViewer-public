@@ -12,6 +12,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.input.KeyCode;
@@ -53,6 +54,12 @@ public class GuiController {
     private ArrayList<TransformedModel> models = new ArrayList<>();
     @FXML
     private ComboBox listOfModels;
+    @FXML
+    private CheckBox fillPolygons;
+    @FXML
+    private CheckBox triangulation;
+    @FXML
+    private CheckBox addLight;
 
 
     //private TransformedModel transformedModel = null;
@@ -71,7 +78,6 @@ public class GuiController {
 
     @FXML
     private void initialize() {
-        listOfModels.setLayoutX(400);
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
@@ -171,8 +177,17 @@ public class GuiController {
 
         }
     }
-    public void onOpenModelFillingPolygons(){
+    public void FillingPolygons(){
+
     }
+
+    public void triangulationModel(){
+
+    }
+    public void addLight(){
+
+    }
+
 
     //камера
     private void handleMouseWheelMoved(ScrollEvent event) {
