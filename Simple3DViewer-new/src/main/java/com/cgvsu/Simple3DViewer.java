@@ -28,7 +28,7 @@ public class Simple3DViewer extends Application {
         scene.setOnKeyPressed(controller::handleKeyEvent);
         scene.setOnKeyReleased(controller::handleKeyReleased);
 
-        stage.setWidth(800);
+        stage.setWidth(900);
         stage.setHeight(600);
         viewport.prefWidthProperty().bind(scene.widthProperty());
         viewport.prefHeightProperty().bind(scene.heightProperty());
