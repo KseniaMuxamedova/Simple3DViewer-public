@@ -63,96 +63,9 @@
             </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Conveyor Options">
-            <MenuItem mnemonicParsing="false" onAction="#scaleByX" text="Scale By X" styleClass="menuItem" >
-                <accelerator>
-                     <KeyCodeCombination alt="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" code="X"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#reduceScaleByX" text="Scale By 1/X" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="X"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#scaleByY" text="Scale By Y" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" code="Y"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#reduceScaleByY" text="Scale By 1/Y" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="Y"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#scaleByZ" text="Scale By Z" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" code="Z"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#reduceScaleByZ" text="Scale By 1/Z" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="Z"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundX" text="Rotate Around X" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="DOWN" shift="UP" shortcut="UP" code="X"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundX1" text="Reverse Rotate Around X" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="DOWN" meta="DOWN" shift="UP" shortcut="UP" code="X"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundY" text="Rotate Around Y" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="DOWN" shift="UP" shortcut="UP" code="Y"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundY1" text="Reverse Rotate Around Y" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="DOWN" meta="DOWN" shift="UP" shortcut="UP" code="Y"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundZ" text="Rotate Around Z" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="UP" meta="DOWN" shift="UP" shortcut="UP" code="Z"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundZ1" text="Reverse Rotate Around Z" styleClass="menuItem" >
-            <accelerator>
-                <KeyCodeCombination alt="UP" control="DOWN" meta="DOWN" shift="UP" shortcut="UP" code="Z"/>
-            </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#translateX" text="Translate Right" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="RIGHT"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#translateX1" text="Translate Left" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="LEFT"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#translateY" text="Translate Up" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" code="W"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#translateY1" text="Translate Down" styleClass="menuItem" >
-                <accelerator>
-                    <KeyCodeCombination alt="DOWN" control="UP" meta="UP" shift="UP" shortcut="UP" code="s"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#translateZ" text="Translate Forward" styleClass="menuItem">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="UP"/>
-                </accelerator>
-            </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#translateZ1" text="Translate Backward" styleClass="menuItem">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="DOWN"/>
-                </accelerator>
-            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#addScaleKey" text="Scale Actual Model" accelerator="S"/>
+            <MenuItem mnemonicParsing="false" onAction="#addRotateKey" text="Rotate Actual Model" accelerator="R"/>
+            <MenuItem mnemonicParsing="false" onAction="#addTranslateKey" text="Grab/Move Actual Model" accelerator="G"/>
         </Menu>
     </MenuBar>
     <Label  layoutX="280.0" layoutY="3.0" textAlignment="CENTER" text="Active model:" styleClass="label" />
