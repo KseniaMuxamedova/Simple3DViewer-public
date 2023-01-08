@@ -11,6 +11,7 @@ public class Model {
     public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    public ArrayList<Polygon> triangulatePolygons = new ArrayList<Polygon>();
 
     public Model(final ArrayList<Vector3f> vertices, final ArrayList<Vector2f> textureVertices, final ArrayList<Vector3f> normals, final ArrayList<Polygon> polygons) {
         this.vertices = vertices;
@@ -41,6 +42,10 @@ public class Model {
     public ArrayList<Polygon> getPolygons() {
         return polygons;
     }
+    
+    public ArrayList<Polygon> getTriangulatePolygons() {
+        return triangulatePolygons;
+    }
 
     public void setVertices(final ArrayList<Vector3f> vertices) {
         this.vertices = vertices;
@@ -56,6 +61,10 @@ public class Model {
 
     public void setPolygons(final ArrayList<Polygon> vertices) {
         this.polygons = vertices;
+    }
+    
+    public void setTriangulatePolygons(final ArrayList<Polygon> vertices) {
+        this.triangulatePolygons = vertices;
     }
 
     public boolean checkConsistency() {
@@ -98,5 +107,25 @@ public class Model {
             }
         }
         return true;
+    }
+    
+    public static Model triangulate(Model model, boolean isTriangulate){
+        ArrayList<Polygon> triangles = getTriangles(model);
+        if (model.triangulatePolygons.isEmpty()) {
+            model.setTriangulatePolygons(triangles);
+        }
+        if (isTriangulate) {
+            model.triangulatePolygons = model.polygons;
+
+            model.setPolygons(triangles);
+        } else {
+            model.polygons = model.triangulatePolygons;
+        }
+        return model;
+    }
+
+    public static ArrayList<Polygon> getTriangles(Model model) {
+        ArrayList<Polygon> triangles = Polygon.triangulatePolygons(model.getPolygons());
+        return triangles;
     }
 }
