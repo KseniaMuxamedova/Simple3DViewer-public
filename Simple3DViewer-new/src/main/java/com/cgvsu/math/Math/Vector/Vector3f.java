@@ -18,6 +18,14 @@ public class Vector3f extends Vector {
     public Vector3f() {
         super(new float[size], size);
     }
+    
+    public Vector3f(float x, float y, float z) {
+        super(new float[size], size);
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+        //this.vector = vector;
+    }
 
     @Override
     public Vector getZeroVector(int size) {
@@ -33,5 +41,17 @@ public class Vector3f extends Vector {
             this.getVector()[1] = vector1.get(2) * vector2.get(0) - vector1.get(0) * vector2.get(2);
             this.getVector()[2] = vector1.get(0) * vector2.get(1) - vector1.get(1) * vector2.get(0);
         }
+    }
+    
+    public float getX() {
+        return vector[0];
+    }
+
+    public float getY() {
+        return vector[1];
+    }
+
+    public float getZ() {
+        return vector[2];
     }
 }
