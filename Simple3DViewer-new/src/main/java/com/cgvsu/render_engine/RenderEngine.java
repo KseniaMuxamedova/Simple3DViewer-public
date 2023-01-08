@@ -19,7 +19,8 @@ public class RenderEngine {
             final Camera camera,
             final ArrayList<TransformedModel> models,
             final int width,
-            final int height) {
+            final int height,
+            boolean isRasterize) {
         for (TransformedModel transformedModel : models) {
             Matrix4f modelMatrix = transformedModel.rotateScaleTranslate();
             Matrix4f viewMatrix = camera.getViewMatrix();
@@ -44,8 +45,8 @@ public class RenderEngine {
                     Point2f resultPoint =
                             vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix3, vertex), width, height);
                     resultPoints.add(resultPoint);
-                }
-
+                } 
+                 if (!isRasterize) {
                 for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                     graphicsContext.strokeLine(
                             resultPoints.get(vertexInPolygonInd - 1).x,
@@ -60,6 +61,9 @@ public class RenderEngine {
                             resultPoints.get(nVerticesInPolygon - 1).y,
                             resultPoints.get(0).x,
                             resultPoints.get(0).y);
+             } else {
+                 //растеризация
+                 }
             }
         }
     }
