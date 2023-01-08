@@ -43,15 +43,15 @@ public class Vector3f extends Vector {
         }
     }
     
-    public float getX() {
-        return vector[0];
-    }
+    //public float getX() {
+    //    return vector[0];
+   // }
 
-    public float getY() {
-        return vector[1];
-    }
+   // public float getY() {
+   //     return vector[1];
+   // }
 
-    public float getZ() {
-        return vector[2];
-    }
+   // public float getZ() {
+   //     return vector[2];
+   // }
 }
