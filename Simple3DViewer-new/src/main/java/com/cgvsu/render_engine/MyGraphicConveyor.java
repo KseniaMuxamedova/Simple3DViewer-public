@@ -15,22 +15,22 @@ public class MyGraphicConveyor {
     public static Matrix4f rotateScaleTranslate(Vector3f rotateVector, Vector3f scaleVector, Vector3f translateVector)
             throws Matrix.MatrixException {
         Matrix4f matrix4f = (Matrix4f) new Matrix4f().createIdentityMatrix();
-        setScaleMatrix(matrix4f, scaleVector);
+        setScale(matrix4f, scaleVector);
         matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getRotateMatrix(rotateVector), matrix4f);
-        addTranslate(matrix4f, translateVector);
+        addTranslation(matrix4f, translateVector);
         return matrix4f;
     }
 
     public static Matrix getRotateMatrix(Vector3f rotateVector) throws Matrix.MatrixException {
         Matrix4f matrix4f = (Matrix4f) new Matrix4f().createIdentityMatrix();
-        if (Math.abs(rotateVector.get(0)) > EPS) {
-            matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getXRotationMatrix(rotateVector.get(0)), matrix4f);
+        if (Math.abs(rotateVector.getX()) > EPS) {
+            matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getXRotationMatrix(rotateVector.getX()), matrix4f);
         }
-        if (Math.abs(rotateVector.get(1)) > EPS) {
-            matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getYRotationMatrix(rotateVector.get(1)), matrix4f);
+        if (Math.abs(rotateVector.getY()) > EPS) {
+            matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getYRotationMatrix(rotateVector.getY()), matrix4f);
         }
-        if (Math.abs(rotateVector.get(2)) > EPS) {
-            matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getZRotationMatrix(rotateVector.get(2)), matrix4f);
+        if (Math.abs(rotateVector.getZ()) > EPS) {
+            matrix4f = (Matrix4f) Matrix4f.multiplicateMatrices(getZRotationMatrix(rotateVector.getZ()), matrix4f);
         }
         return matrix4f;
     }
@@ -71,7 +71,7 @@ public class MyGraphicConveyor {
                 0, 0, 0, 1});
     }
 
-    public static void setScaleMatrix(Matrix4f matrix4f, Vector3f scaleVector) {
+    public static void setScale(Matrix4f matrix4f, Vector3f scaleVector) {
         int index = 0;
         int size = matrix4f.getSize();
         for (float value : scaleVector.getVector()) {
@@ -82,7 +82,7 @@ public class MyGraphicConveyor {
         }
     }
 
-    public static void addTranslate(Matrix4f matrix4f, Vector3f translateVector) {
+    public static void addTranslation(Matrix4f matrix4f, Vector3f translateVector) {
         int indexRow = 0;
         int size = matrix4f.getSize();
         for (float value : translateVector.getVector()) {
@@ -110,9 +110,9 @@ public class MyGraphicConveyor {
 
         // Переход в систему координат камеры
         float[] matrix = new float[]{
-                resultX.get(0), resultY.get(0), resultZ.get(0), -resultX.dotProduct(eye),
-                resultX.get(1), resultY.get(1), resultZ.get(1), -resultY.dotProduct(eye),
-                resultX.get(2), resultY.get(2), resultZ.get(2), -resultZ.dotProduct(eye),
+                resultX.getX(), resultY.getX(), resultZ.getX(), -resultX.dotProduct(eye),
+                resultX.getY(), resultY.getY(), resultZ.getY(), -resultY.dotProduct(eye),
+                resultX.getZ(), resultY.getZ(), resultZ.getZ(), -resultZ.dotProduct(eye),
                 0, 0, 0, 1
         };
 
@@ -134,15 +134,18 @@ public class MyGraphicConveyor {
         return result;
     }
 
-    public static Vector3f multiplyMatrix4ByVector3(final Matrix4f matrix, final Vector3f vertex)
-            throws Vector.VectorException, Matrix.MatrixException {
-        Vector4f vector4f = (Vector4f) matrix.multiplicateOnVector(
-                new Vector4f(new float[]{vertex.get(0), vertex.get(1), vertex.get(2), 1}));
-        float w = vector4f.get(3);
-        return new Vector3f(new float[]{vector4f.get(0) / w, vector4f.get(1) / w, vector4f.get(2) / w});
+    public static Vector3f multiplyMatrix4ByVector3(final Matrix4f matrix, final Vector3f vertex) {
+        try {
+            Vector4f vector4f = (Vector4f) matrix.multiplicateOnVector(
+                    new Vector4f(new float[]{vertex.getX(), vertex.getY(), vertex.getZ(), 1}));
+            return (Vector3f) new Vector3f(new float[]{vector4f.getX(), vector4f.getY(), vector4f.getZ()}).
+                    divideVectorOnConstant(vector4f.get(3));
+        } catch (Vector.VectorException | Matrix.MatrixException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Point2f vertexToPoint(final Vector3f vertex, final int width, final int height) {
-        return new Point2f(vertex.get(0) * width + width / 2.0F, -vertex.get(1) * height + height / 2.0F);
+        return new Point2f(vertex.getX() * width + width / 2.0F, -vertex.getY() * height + height / 2.0F);
     }
 }
