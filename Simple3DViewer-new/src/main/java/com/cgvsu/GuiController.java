@@ -61,13 +61,8 @@ public class GuiController {
     @FXML
     private CheckBox addLight;
 
-
-    //private TransformedModel transformedModel = null;
-
-    private ArrayList<KeyCode> keyCodes = null;
+    private ArrayList<ArrayList<KeyCode>> keyCodes = new ArrayList<>();
     private ArrayList<String> modelsNames = new ArrayList<>();
-
-
 
     private Camera camera = new Camera(
             new Vector3f(new float[]{0, 00, 100}),
@@ -93,8 +88,7 @@ public class GuiController {
 
 
             if (models != null) {
-                canvas.setOnScroll(this::handleMouseWheelMoved);
-                canvas.setOnMousePressed(this::handleMousePressed);
+                handleMouseActions();
                 listOfModels.setItems(FXCollections
                         .observableArrayList(listToArr(modelsNames)));
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, models,
@@ -130,7 +124,7 @@ public class GuiController {
             modelsNames.add(file.getName());
 
             //проверить пустоту
-            keyCodes = new ArrayList<KeyCode>();
+            keyCodes.add(new ArrayList<>());
             // todo: обработка ошибок
         } catch (IOException exception) {
 
@@ -188,34 +182,143 @@ public class GuiController {
 
     }
 
+    private void handleMouseActions() {
+        if (keyCodes.isEmpty() || getSelectIndex(listOfModels) == -1 ||
+                keyCodes.get(getSelectIndex(listOfModels)).isEmpty()) {
+            canvas.setOnScroll(this::handleMouseWheelMoved);
+            canvas.setOnMousePressed(this::handleMousePressed);
+        } else {
+            if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.S)) {
+                handleModelScale();
+            } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.R)) {
+                handleModelRotation();
+            } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.G)) {
+                handleModelTranslation();
+            }
+        }
+    }
 
     //камера
     private void handleMouseWheelMoved(ScrollEvent event) {
         final double notches = event.getDeltaY();
-        final float x = camera.getPosition().get(0);
-        final float y = camera.getPosition().get(1);
-        final float z = camera.getPosition().get(2);
-        final float signX = x < 0 ? 1 : -1;
-        final float signY = y < 0 ? 1 : -1;
-        final float signZ = z < 0 ? 1 : -1;
+        final float x = camera.getPosition().getX();
+        final float y = camera.getPosition().getY();
+        final float z = camera.getPosition().getZ();
         final float max = Math.max(Math.max(Math.abs(x), Math.abs(y)), Math.abs(z));
+        final float paramX = x < EPS ? -TRANSLATION : TRANSLATION;
+        final float paramY = y < EPS ? -TRANSLATION : TRANSLATION;
+        final float paramZ = z < EPS ? -TRANSLATION : TRANSLATION;
 
-        if (notches > 0) {
-            if (max - x < EPS) {
-                camera.movePosition(new Vector3f(new float[]{signX * TRANSLATION, 0, 0}));
-            } else if (max - y < EPS) {
-                camera.movePosition(new Vector3f(new float[]{0, signY * TRANSLATION, 0}));
+        if (notches < EPS) {
+            if (max - Math.abs(x) < EPS) {
+                camera.movePosition(new Vector3f(new float[]{paramX, 0, 0}));
+            } else if (max - Math.abs(y) < EPS) {
+                camera.movePosition(new Vector3f(new float[]{0, paramY, 0}));
             } else {
-                camera.movePosition(new Vector3f(new float[]{0, 0, signZ * TRANSLATION}));
+                camera.movePosition(new Vector3f(new float[]{0, 0, paramZ}));
             }
         } else {
-            if (max - x < EPS) {
-                camera.movePosition(new Vector3f(new float[]{-signX * TRANSLATION, 0, 0}));
-            } else if (max - y < EPS) {
-                camera.movePosition(new Vector3f(new float[]{0, -signY * TRANSLATION, 0}));
+            if (max - Math.abs(x) < EPS) {
+                camera.movePosition(new Vector3f(new float[]{-paramX, 0, 0}));
+            } else if (max - Math.abs(y) < EPS) {
+                camera.movePosition(new Vector3f(new float[]{0, -paramY, 0}));
             } else {
-                camera.movePosition(new Vector3f(new float[]{0, 0, -signZ * TRANSLATION}));
+                camera.movePosition(new Vector3f(new float[]{0, 0, -paramZ}));
             }
+        }
+    }
+    
+    private void handleModelScale() {
+        canvas.setOnScroll(scrollEvent -> {
+            final float sign = scrollEvent.getDeltaY() > EPS ? SCALE : -SCALE;
+            if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.X)) {
+                scaleByX(sign);
+            } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.Y)) {
+                scaleByY(sign);
+            } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.Z)) {
+                scaleByZ(sign);
+            } else {
+                scaleByX(sign);
+                scaleByY(sign);
+                scaleByZ(sign);
+            }
+        });
+    }
+
+    private void handleModelRotation() {
+        canvas.setOnMousePressed(event -> {
+            final float x = (float) (canvas.getWidth() / 2);
+            final float y = (float) (canvas.getHeight() / 2);
+            var ref = new Object() {
+                float prevX = (float) event.getX();
+                float prevY = (float) event.getY();
+            };
+            canvas.setOnMouseDragged(mouseEvent -> {
+                final float actualX = (float) mouseEvent.getX();
+                final float actualY = (float) mouseEvent.getY();
+                final float dx = ref.prevX - actualX;
+                final float dy = ref.prevY - actualY;
+                float dz = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+
+                if (ref.prevY <= y && dx <= EPS) {
+                    dz *= -1;
+                } else if (ref.prevY >= y && dx >= EPS) {
+                    dz *= -1;
+                }
+
+                ref.prevX = actualX;
+                ref.prevY = actualY;
+                rotateModel((Vector3f) new Vector3f(new float[]{dy, -dx, dz}).multiplicateVectorOnConstant(0.01f));
+            });
+        });
+    }
+
+    private void rotateModel(final Vector3f vector3f) {
+        if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.X)) {
+            rotateAroundX(vector3f.getX());
+        } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.Y)) {
+            rotateAroundY(vector3f.getY());
+        } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.Z)) {
+            rotateAroundZ(vector3f.getZ());
+        } else {
+            rotateAroundX(vector3f.getX());
+            rotateAroundY(vector3f.getY());
+            rotateAroundZ(vector3f.getZ());
+        }
+    }
+
+    private void handleModelTranslation() {
+        canvas.setOnMousePressed(event -> {
+            var ref = new Object() {
+                float prevX = (float) event.getX();
+                float prevY = (float) event.getY();
+            };
+            canvas.setOnMouseDragged(mouseEvent -> {
+                final float actualX = (float) mouseEvent.getX();
+                final float actualY = (float) mouseEvent.getY();
+                final float dx = ref.prevX - actualX;
+                final float dy = ref.prevY - actualY;
+                final float max = Math.max(Math.abs(dx), Math.abs(dy));
+                final float dz = max - Math.abs(dx) <= EPS ? dx : -dy;
+
+                ref.prevX = actualX;
+                ref.prevY = actualY;
+                translateModel((Vector3f) new Vector3f(new float[]{dx, dy, dz}).multiplicateVectorOnConstant(0.01f));
+            });
+        });
+    }
+
+    private void translateModel(final Vector3f vector3f) {
+        if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.X)) {
+            translateX(vector3f.getX());
+        } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.Y)) {
+            translateY(vector3f.getY());
+        } else if (keyCodes.get(getSelectIndex(listOfModels)).contains(KeyCode.Z)) {
+            translateZ(vector3f.getZ());
+        } else {
+            translateX(vector3f.getX());
+            translateY(vector3f.getY());
+            translateZ(vector3f.getZ());
         }
     }
 
@@ -233,125 +336,52 @@ public class GuiController {
             final float dxy = Math.abs(dx) - Math.abs(dy);
             float dz = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
-            if (dxy >= EPS && (camera.getPosition().get(0) <= EPS && dx < 0 ||
-                    camera.getPosition().get(0) > EPS && dx > 0)) {
+            if (dxy >= EPS && (camera.getPosition().getX() <= EPS && dx < EPS ||
+                    camera.getPosition().getX() > EPS && dx > EPS)) {
                 dz *= -1;
             } else if (dxy < EPS) { //если больше перемещаем по y, то по z не перемещаем
                 dz = 0;
             }
-            if (camera.getPosition().get(2) <= EPS) {
+            if (camera.getPosition().getZ() <= EPS) {
                 dx *= -1;
             }
 
             ref.prevX = actualX;
             ref.prevY = actualY;
-            camera.movePosition(new Vector3f(new float[]{dx * 0.01f, dy * 0.01f, dz * 0.01f}));
+            camera.movePosition((Vector3f) new Vector3f(new float[]{dx, dy, dz}).multiplicateVectorOnConstant(0.01f));
         });
     }
 
-    //не менять
     public void handleKeyEvent(KeyEvent e) {
-        KeyCode key = e.getCode();
-        if (!keyCodes.contains(key)) {
-            keyCodes.add(key);
+        final KeyCode key = e.getCode();
+        final Set<KeyCode> listSRG = Set.of(KeyCode.S, KeyCode.R, KeyCode.G);
+        if (!listSRG.contains(key)) {
+            checkXYZKeys(key);
         }
-        handleKeys();
     }
 
-    //не менять
-    private void handleKeys() {
-        if (keyCodes.contains(KeyCode.G)) {
-            handleTranslate();
-        } else if (keyCodes.contains(KeyCode.E)) {
-            handleScale();
-        } else if (keyCodes.contains(KeyCode.R)) {
-            handleRotate();
+    private void checkXYZKeys(final KeyCode key) {
+        final Set<KeyCode> listXYZ = Set.of(KeyCode.X, KeyCode.Y, KeyCode.Z);
+        final int modelIndex = getSelectIndex(listOfModels);
+        if (!keyCodes.get(modelIndex).contains(key)) {
+            if (keyCodes.get(modelIndex).size() > 1) {
+                for (KeyCode keyCode : listXYZ) {
+                    keyCodes.get(modelIndex).remove(keyCode);
+                }
+            }
+            keyCodes.get(modelIndex).add(key);
+        } else { // при повторном нажатии удаляет
+            keyCodes.get(modelIndex).remove(key);
+        }
+    }
+
+    private void checkSRGKeys(final KeyCode key) {
+        final int modelIndex = getSelectIndex(listOfModels);
+        if (!keyCodes.get(modelIndex).contains(key)) {
+            keyCodes.get(modelIndex).clear();
+            keyCodes.get(modelIndex).add(key);
         } else {
-            handleCameraMove();
-        }
-    }
-
-    //камера
-    public void handleKeyReleased(KeyEvent event) {
-        keyCodes.remove(event.getCode());
-    }
-
-    //не менять
-    private void handleTranslate() {
-        if (keyCodes.contains(KeyCode.D)) {
-            translateX1();
-        } else if (keyCodes.contains(KeyCode.A)) {
-            translateX();
-        }
-        if (keyCodes.contains(KeyCode.W)) {
-            translateY();
-        } else if (keyCodes.contains(KeyCode.S)) {
-            translateY1();
-        }
-        if (keyCodes.contains(KeyCode.UP)) {
-            translateZ();
-        } else if (keyCodes.contains(KeyCode.DOWN)) {
-            translateZ1();
-        }
-    }
-
-    //не менять
-    private void handleScale() {
-        if (keyCodes.contains(KeyCode.D)) {
-            scaleByX();
-        } else if (keyCodes.contains(KeyCode.A)) {
-            reduceScaleByX();
-        }
-        if (keyCodes.contains(KeyCode.W)) {
-            scaleByY();
-        } else if (keyCodes.contains(KeyCode.S)) {
-            reduceScaleByY();
-        }
-        if (keyCodes.contains(KeyCode.UP)) {
-            scaleByZ();
-        } else if (keyCodes.contains(KeyCode.DOWN)) {
-            reduceScaleByZ();
-        }
-    }
-
-    //не менять
-    private void handleRotate() {
-        if (keyCodes.contains(KeyCode.W)) {
-            rotateAroundX();
-        }
-        if (keyCodes.contains(KeyCode.D)) {
-            rotateAroundY();
-        }
-        if (keyCodes.contains(KeyCode.DOWN)) {
-            rotateAroundZ();
-        }
-        if (keyCodes.contains(KeyCode.S)) {
-            rotateAroundX1();
-        }
-        if (keyCodes.contains(KeyCode.A)) {
-            rotateAroundY1();
-        }
-        if (keyCodes.contains(KeyCode.UP)) {
-            rotateAroundZ1();
-        }
-    }
-
-    //камера
-    private void handleCameraMove() {
-        if (keyCodes.contains(KeyCode.W)) {
-            handleCameraUp();
-        } else if (keyCodes.contains(KeyCode.S)) {
-            handleCameraDown();
-        }
-        if (keyCodes.contains(KeyCode.D)) {
-            handleCameraRight();
-        } else if (keyCodes.contains(KeyCode.A)) {
-            handleCameraLeft();
-        }
-        if (keyCodes.contains(KeyCode.UP)) {
-            handleCameraForward();
-        } else if (keyCodes.contains(KeyCode.DOWN)) {
-            handleCameraBackward();
+            keyCodes.get(modelIndex).clear();
         }
     }
 
@@ -386,125 +416,66 @@ public class GuiController {
         camera.movePosition(new Vector3f(new float[]{0, -TRANSLATION, 0}));
     }
 
-    //для актуальной
-    @FXML
-    public void scaleByX() {
-        float scaleParam = models.get(0).getScaleParams().get(0);
+    public void scaleModel(final int index, final float param) {
+        final float scaleParam = models.get(getSelectIndex(listOfModels)).getScaleParams().get(index);
         if (scaleParam - 1 <= EPS) {
-            models.get(getSelectIndex(listOfModels)).setScaleXParams(scaleParam * SCALE);
+            models.get(getSelectIndex(listOfModels)).setScaleParams(index, scaleParam * param);
         } else {
-            models.get(getSelectIndex(listOfModels)).setScaleXParams(SCALE);
+            models.get(getSelectIndex(listOfModels)).setScaleParams(index, param);
         }
     }
 
-    //для актуальной
-    @FXML
-    public void reduceScaleByX() {
-        float scaleParam = models.get(getSelectIndex(listOfModels)).getScaleParams().get(0);
-        if (scaleParam - 1 <= EPS) {
-            models.get(getSelectIndex(listOfModels)).setScaleXParams(-scaleParam * SCALE);
-        } else {
-            models.get(getSelectIndex(listOfModels)).setScaleXParams(-SCALE);
-        }
+    public void scaleByX(final float param) {
+        scaleModel(0, param);
+    }
+
+    public void scaleByY(final float param) {
+        scaleModel(1, param);
+    }
+
+    public void scaleByZ(final float param) {
+        scaleModel(2, param);
+    }
+
+    public void rotateAroundX(final float param) {
+        models.get(getSelectIndex(listOfModels)).setRotateXParam(param);
+    }
+
+    public void rotateAroundY(final float param) {
+        models.get(getSelectIndex(listOfModels)).setRotateYParam(param);
+    }
+
+    public void rotateAroundZ(final float param) {
+        models.get(getSelectIndex(listOfModels)).setRotateZParam(param);
+    }
+
+    private void translateX(final float param) {
+        models.get(getSelectIndex(listOfModels)).setTranslateXParam(param);
+    }
+
+    private void translateY(final float param) {
+        models.get(getSelectIndex(listOfModels)).setTranslateYParam(param);
+    }
+
+    private void translateZ(final float param) {
+        models.get(getSelectIndex(listOfModels)).setTranslateZParam(param);
     }
 
     @FXML
-    public void scaleByY() {
-        float scaleParam = models.get(getSelectIndex(listOfModels)).getScaleParams().get(1);
-        if (scaleParam - 1 <= EPS) {
-            models.get(getSelectIndex(listOfModels)).setScaleYParams(scaleParam * SCALE);
-        } else {
-            models.get(getSelectIndex(listOfModels)).setScaleYParams(SCALE);
-        }
+    public void addScaleKey() {
+        checkSRGKeys(KeyCode.S);
+        handleModelScale();
     }
 
     @FXML
-    public void reduceScaleByY() {
-        float scaleParam = models.get(getSelectIndex(listOfModels)).getScaleParams().get(1);
-        if (scaleParam - 1 <= EPS) {
-            models.get(getSelectIndex(listOfModels)).setScaleYParams(-scaleParam * SCALE);
-        } else {
-            models.get(getSelectIndex(listOfModels)).setScaleYParams(-SCALE);
-        }
+    public void addRotateKey() {
+        checkSRGKeys(KeyCode.R);
+        handleModelRotation();
     }
 
     @FXML
-    public void scaleByZ() {
-        float scaleParam = models.get(getSelectIndex(listOfModels)).getScaleParams().get(2);
-        if (scaleParam - 1 <= EPS) {
-            models.get(getSelectIndex(listOfModels)).setScaleZParams(scaleParam * SCALE);
-        } else {
-            models.get(getSelectIndex(listOfModels)).setScaleZParams(SCALE);
-        }
-    }
-
-    @FXML
-    public void reduceScaleByZ() {
-        float scaleParam = models.get(getSelectIndex(listOfModels)).getScaleParams().get(2);
-        if (scaleParam - 1 <= EPS) {
-            models.get(getSelectIndex(listOfModels)).setScaleZParams(-scaleParam * SCALE);
-        } else {
-            models.get(getSelectIndex(listOfModels)).setScaleZParams(-SCALE);
-        }
-    }
-
-    @FXML
-    public void rotateAroundX() {
-        models.get(getSelectIndex(listOfModels)).setRotateXParam(ROTATE_PARAM);
-    }
-
-    @FXML
-    public void rotateAroundX1() {
-        models.get(getSelectIndex(listOfModels)).setRotateXParam(-ROTATE_PARAM);
-    }
-
-    @FXML
-    public void rotateAroundY() {
-        models.get(getSelectIndex(listOfModels)).setRotateYParam(ROTATE_PARAM);
-    }
-
-    @FXML
-    public void rotateAroundY1() {
-        models.get(getSelectIndex(listOfModels)).setRotateYParam(-ROTATE_PARAM);
-    }
-
-    @FXML
-    public void rotateAroundZ() {
-        models.get(getSelectIndex(listOfModels)).setRotateZParam(ROTATE_PARAM);
-    }
-
-    @FXML
-    public void rotateAroundZ1() {
-        models.get(getSelectIndex(listOfModels)).setRotateZParam(-ROTATE_PARAM);
-    }
-
-    @FXML
-    public void translateX() {
-        models.get(getSelectIndex(listOfModels)).setTranslateXParam(TRANSLATION);
-    }
-
-    @FXML
-    public void translateX1() {
-        models.get(getSelectIndex(listOfModels)).setTranslateXParam(-TRANSLATION);
-    }
-
-    @FXML
-    public void translateY() {
-        models.get(getSelectIndex(listOfModels)).setTranslateYParam(TRANSLATION);
-    }
-
-    @FXML
-    public void translateY1() {
-        models.get(getSelectIndex(listOfModels)).setTranslateYParam(-TRANSLATION);
-    }
-
-    @FXML
-    public void translateZ() {
-        models.get(getSelectIndex(listOfModels)).setTranslateZParam(TRANSLATION);
-    }
-
-    @FXML
-    public void translateZ1() {
-        models.get(getSelectIndex(listOfModels)).setTranslateZParam(-TRANSLATION);
+    public void addTranslateKey() {
+        checkSRGKeys(KeyCode.G);
+        handleModelTranslation();
     }
 }
