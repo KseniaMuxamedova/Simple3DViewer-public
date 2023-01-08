@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class TransformedModel {
     public Model actualModel;
-
     public ArrayList<Vector3f> transformedVertices = new ArrayList<>();
 
     private float scaleXParams = 1;
@@ -41,8 +40,6 @@ public class TransformedModel {
         this.translateZParams = translateZParams;
     }
 
-    public TransformedModel() {
-    }
     public TransformedModel(final Model actualModel) {
         this.actualModel = actualModel;
     }
@@ -52,33 +49,33 @@ public class TransformedModel {
     }
 
     public void setTransformedModel() {
-        this.transformedVertices = copy(actualModel);
+        this.transformedVertices = copy(actualModel.getVertices());
     }
 
     public ArrayList<Vector3f> getTransformedVertices() {
         return transformedVertices;
     }
 
-    public ArrayList<Vector3f> copy(final Model actualModel) {
-        return new ArrayList<>(actualModel.getVertices());
+    public ArrayList<Vector3f> copy(final ArrayList<Vector3f> list) {
+        return new ArrayList<>(list);
     }
 
     public void setRotateParams(float rotateXParams, float rotateYParams, float rotateZParams) {
-        this.rotateXParams = rotateXParams;
-        this.rotateYParams = rotateYParams;
-        this.rotateZParams = rotateZParams;
+        this.rotateXParams += rotateXParams;
+        this.rotateYParams += rotateYParams;
+        this.rotateZParams += rotateZParams;
     }
 
     public void setRotateXParam(float rotateParam) {
-        this.rotateXParams = rotateParam + rotateXParams;
+        this.rotateXParams += rotateParam;
     }
 
     public void setRotateYParam(float rotateParam) {
-        this.rotateYParams = rotateParam + rotateYParams;
+        this.rotateYParams += rotateParam;
     }
 
     public void setRotateZParam(float rotateParams) {
-        this.rotateZParams = rotateParams + rotateZParams;
+        this.rotateZParams += rotateParams;
     }
 
     public Vector3f getRotateParams() {
@@ -86,21 +83,31 @@ public class TransformedModel {
     }
 
     public void setScaleParams(float scaleXParams, float scaleYParams, float scaleZParams) {
-        this.scaleXParams = this.scaleXParams + scaleXParams;
-        this.scaleYParams = this.scaleYParams + scaleYParams;
-        this.scaleZParams = this.scaleZParams + scaleZParams;
+        this.scaleXParams += scaleXParams;
+        this.scaleYParams += scaleYParams;
+        this.scaleZParams += scaleZParams;
+    }
+
+    public void setScaleParams(int index, float scaleParams) {
+        if (index == 0) {
+            setScaleXParams(scaleParams);
+        } else if (index == 1) {
+            setScaleYParams(scaleParams);
+        } else if (index == 2) {
+            setScaleZParams(scaleParams);
+        }
     }
 
     public void setScaleXParams(float scaleParam) {
-        this.scaleXParams = scaleParam + scaleXParams;
+        this.scaleXParams += scaleParam;
     }
 
     public void setScaleYParams(float scaleParam) {
-        this.scaleYParams = scaleParam + scaleYParams;
+        this.scaleYParams += scaleParam;
     }
 
     public void setScaleZParams(float scaleParam) {
-        this.scaleZParams = scaleParam + scaleZParams;
+        this.scaleZParams += scaleParam;
     }
 
     public Vector3f getScaleParams() {
@@ -108,21 +115,21 @@ public class TransformedModel {
     }
 
     public void setTranslateParams(float translateXParams, float translateYParams, float translateZParams) {
-        this.translateXParams = translateXParams;
-        this.translateYParams = translateYParams;
-        this.translateZParams = translateZParams;
+        this.translateXParams += translateXParams;
+        this.translateYParams += translateYParams;
+        this.translateZParams += translateZParams;
     }
 
     public void setTranslateXParam(float translateParam) {
-        this.translateXParams = translateParam + translateXParams;
+        this.translateXParams += translateParam;
     }
 
     public void setTranslateYParam(float translateParam) {
-        this.translateYParams = translateParam + translateYParams;
+        this.translateYParams += translateParam;
     }
 
     public void setTranslateZParam(float translateParam) {
-        this.translateZParams = translateParam + translateZParams;
+        this.translateZParams += translateParam;
     }
 
     public Vector3f getTranslateParams() {
