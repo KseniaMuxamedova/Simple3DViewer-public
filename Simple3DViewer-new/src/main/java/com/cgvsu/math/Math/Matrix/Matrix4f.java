@@ -101,4 +101,12 @@ public class Matrix4f extends Matrix {
 
         return determinant;
     }
+    
+    public static Matrix4f multiplicateMatrices(final Matrix4f matrix1, final Matrix4f matrix2) {
+        try {
+            return (Matrix4f) Matrix.multiplicateMatrices(matrix1, matrix2);
+        } catch (MatrixException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
