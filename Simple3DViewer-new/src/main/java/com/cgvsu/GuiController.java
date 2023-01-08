@@ -55,6 +55,10 @@ public class GuiController {
     private ArrayList<TransformedModel> models = new ArrayList<>();
     @FXML
     private ComboBox listOfModels;
+    
+    private boolean isTriangulate = false;
+    private boolean isRasterize = false;
+    
     @FXML
     private CheckBox fillPolygons;
     @FXML
@@ -93,7 +97,7 @@ public class GuiController {
                 listOfModels.setItems(FXCollections
                         .observableArrayList(listToArr(modelsNames)));
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, models,
-                        (int) width, (int) height);
+                        (int) width, (int) height, isRasterize);
             }
         });
         timeline.getKeyFrames().add(frame);
@@ -173,10 +177,13 @@ public class GuiController {
         }
     }
     public void FillingPolygons(){
-
+          isRasterize = !isRasterize;
     }
 
     public void triangulationModel(){
+            isTriangulate = !isTriangulate;
+        Model.triangulate(models.get(getSelectIndex(listOfModels)).actualModel,isTriangulate);
+   
 
     }
     public void addLight(){
