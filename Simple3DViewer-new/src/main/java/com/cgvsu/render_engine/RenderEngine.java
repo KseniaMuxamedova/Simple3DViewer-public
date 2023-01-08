@@ -21,25 +21,16 @@ public class RenderEngine {
             final int width,
             final int height) {
         for (TransformedModel transformedModel : models) {
-
             Matrix4f modelMatrix = transformedModel.rotateScaleTranslate();
             Matrix4f viewMatrix = camera.getViewMatrix();
             Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
             Matrix4f modelViewProjectionMatrix1 = new Matrix4f(modelMatrix.getVector());
-            Matrix4f modelViewProjectionMatrix2 = null;
-            Matrix4f modelViewProjectionMatrix3 = null;
-            try {
-                modelViewProjectionMatrix2 =
-                        (Matrix4f) Matrix4f.multiplicateMatrices(viewMatrix, modelViewProjectionMatrix1);
-                modelViewProjectionMatrix3 =
-                        (Matrix4f) Matrix4f.multiplicateMatrices(projectionMatrix, modelViewProjectionMatrix2);
-            } catch (Matrix.MatrixException e) {
-                throw new RuntimeException(e);
-            }
+            Matrix4f modelViewProjectionMatrix2 = Matrix4f.multiplicateMatrices(viewMatrix, modelViewProjectionMatrix1);
+            Matrix4f modelViewProjectionMatrix3 =
+                    Matrix4f.multiplicateMatrices(projectionMatrix, modelViewProjectionMatrix2);
 
             Model actualModel = transformedModel.getPrevModel();
-
             final int nPolygons = actualModel.polygons.size();
             for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
                 final int nVerticesInPolygon = actualModel.polygons.get(polygonInd).getVertexIndices().size();
@@ -48,16 +39,11 @@ public class RenderEngine {
                 for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
                     int index = actualModel.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd);
                     Vector3f vertex = actualModel.vertices.get(index);
-
-                    try {
-                        Vector3f newVertex = multiplyMatrix4ByVector3(modelMatrix, vertex);
-                        transformedModel.getTransformedVertices().set(index, newVertex);
-                        Point2f resultPoint =
-                                vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix3, vertex), width, height);
-                        resultPoints.add(resultPoint);
-                    } catch (Vector.VectorException | Matrix.MatrixException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Vector3f newVertex = multiplyMatrix4ByVector3(modelMatrix, vertex);
+                    transformedModel.getTransformedVertices().set(index, newVertex);
+                    Point2f resultPoint =
+                            vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix3, vertex), width, height);
+                    resultPoints.add(resultPoint);
                 }
 
                 for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
