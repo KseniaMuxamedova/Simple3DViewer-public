@@ -20,6 +20,13 @@
                 <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="F"/>
             </accelerator>
             </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClickPNG" text="Load Image"  styleClass="menuItem" >
+                <accelerator>
+                    <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="I"/>
+                </accelerator>
+            </MenuItem>
+
+
             <MenuItem mnemonicParsing="false" onAction="#onWriteModelMenuItemClick" text="Write to file model" styleClass="menuItem" >
                 <accelerator>
                     <KeyCodeCombination alt="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" code="S"/>

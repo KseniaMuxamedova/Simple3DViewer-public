@@ -21,6 +21,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -31,6 +32,8 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -167,6 +170,30 @@ public class GuiController {
             // todo: обработка ошибок
         } catch (IOException exception) {
 
+        }
+    }
+
+    @FXML
+    private void onOpenModelMenuItemClickPNG() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texture (*.png)", "*.png"));
+        fileChooser.setTitle("Load Texture");
+
+        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        Path fileName = Path.of(file.getAbsolutePath());
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file.getAbsolutePath());
+            Image image = new Image(new FileInputStream(String.valueOf(fileName)));
+            //models.get(getSelectIndex(listOfModels)).actualModel.setTextureImage(image);
+            //image.getPixelReader().getColor(6, 9);
+            //BufferedImageFilter imageFilter = new BufferedImageFilter(new FileInputStream(String.valueOf(fileName)));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
