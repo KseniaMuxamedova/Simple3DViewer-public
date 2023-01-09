@@ -68,6 +68,24 @@
             <MenuItem mnemonicParsing="false" onAction="#addScaleKey" text="Scale Actual Model" accelerator="S"/>
             <MenuItem mnemonicParsing="false" onAction="#addRotateKey" text="Rotate Actual Model" accelerator="R"/>
             <MenuItem mnemonicParsing="false" onAction="#addTranslateKey" text="Grab/Move Actual Model" accelerator="G"/>
+            <MenuItem mnemonicParsing="false" onAction="#scaleByX" text="Scale By X"/>
+            <MenuItem mnemonicParsing="false" onAction="#reduceScaleByX" text="Reduce Scale By X"/>
+            <MenuItem mnemonicParsing="false" onAction="#scaleByY" text="Scale By Y"/>
+            <MenuItem mnemonicParsing="false" onAction="#reduceScaleByY" text="Reduce Scale By Y"/>
+            <MenuItem mnemonicParsing="false" onAction="#scaleByZ" text="Scale By Z"/>
+            <MenuItem mnemonicParsing="false" onAction="#reduceScaleByZ" text="Reduce Scale By Z"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundXUp" text="Rotate Up"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundXDown" text="Rotate Down"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundYRight" text="Rotate Right"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundYLeft" text="Rotate Left"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundZLeft" text="Rotate Around Z (Left)"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundZRight" text="Rotate Around Z (Right)"/>
+            <MenuItem mnemonicParsing="false" onAction="#translateXLeft" text="Translate Left"/>
+            <MenuItem mnemonicParsing="false" onAction="#translateXRight" text="Translate Right"/>
+            <MenuItem mnemonicParsing="false" onAction="#translateYUp" text="Translate Up"/>
+            <MenuItem mnemonicParsing="false" onAction="#translateYDown" text="Translate Down"/>
+            <MenuItem mnemonicParsing="false" onAction="#translateZForward" text="Translate Forward"/>
+            <MenuItem mnemonicParsing="false" onAction="#translateZBackward" text="Translate Backward"/>
         </Menu>
     </MenuBar>
     <Label  layoutX="280.0" layoutY="3.0" textAlignment="CENTER" text="Active model:" styleClass="label" />

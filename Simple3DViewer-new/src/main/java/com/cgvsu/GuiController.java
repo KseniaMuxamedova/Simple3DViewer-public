@@ -50,6 +50,8 @@ public class GuiController {
     final private float SCALE = 0.05F;
 
     final private float ROTATE_PARAM = 1F;
+    
+    final private float MOUSE_SENSITIVITY = 0.01F;
 
     static final float EPS = 1e-6f;
 
@@ -188,7 +190,7 @@ public class GuiController {
         fileChooser.setInitialFileName("Saved Model");
         try {
             File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
-            ObjWriter.writeTransformedModel(file.getAbsolutePath(), models.get(getSelectIndex(listOfModels)));
+            ObjWriter.write(file.getAbsolutePath(), models.get(getSelectIndex(listOfModels)).getPrevModel());
             // todo: обработка ошибок
         } catch (Exception exception) {
 
@@ -302,15 +304,13 @@ public class GuiController {
                 final float dy = ref.prevY - actualY;
                 float dz = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
-                if (ref.prevY <= y && dx <= EPS) {
-                    dz *= -1;
-                } else if (ref.prevY >= y && dx >= EPS) {
+                if (ref.prevY <= y && dx <= EPS || ref.prevY >= y && dx >= EPS) {
                     dz *= -1;
                 }
 
                 ref.prevX = actualX;
                 ref.prevY = actualY;
-                rotateModel((Vector3f) new Vector3f(new float[]{dy, -dx, dz}).multiplicateVectorOnConstant(0.01f));
+                rotateModel((Vector3f) new Vector3f(new float[]{dy, -dx, dz}).multiplicateVectorOnConstant(MOUSE_SENSITIVITY));
             });
         });
     }
@@ -340,12 +340,11 @@ public class GuiController {
                 final float actualY = (float) mouseEvent.getY();
                 final float dx = ref.prevX - actualX;
                 final float dy = ref.prevY - actualY;
-                final float max = Math.max(Math.abs(dx), Math.abs(dy));
-                final float dz = max - Math.abs(dx) <= EPS ? dx : -dy;
+                final float dz = Math.abs(dx) - Math.abs(dy) >= EPS ? dx : -dy;
 
                 ref.prevX = actualX;
                 ref.prevY = actualY;
-                translateModel((Vector3f) new Vector3f(new float[]{dx, dy, dz}).multiplicateVectorOnConstant(0.01f));
+                translateModel((Vector3f) new Vector3f(new float[]{dx, dy, dz}).multiplicateVectorOnConstant(MOUSE_SENSITIVITY));
             });
         });
     }
@@ -390,7 +389,7 @@ public class GuiController {
 
             ref.prevX = actualX;
             ref.prevY = actualY;
-            camera.movePosition((Vector3f) new Vector3f(new float[]{dx, dy, dz}).multiplicateVectorOnConstant(0.01f));
+            camera.movePosition((Vector3f) new Vector3f(new float[]{dx, dy, dz}).multiplicateVectorOnConstant(MOUSE_SENSITIVITY));
         });
     }
 
@@ -502,6 +501,97 @@ public class GuiController {
     private void translateZ(final float param) {
         models.get(getSelectIndex(listOfModels)).setTranslateZParam(param);
     }
+    
+    @FXML
+    public void scaleByX() {
+        scaleByX(SCALE);
+    }
+
+    @FXML
+    public void reduceScaleByX() {
+        scaleByX(-SCALE);
+    }
+
+    @FXML
+    public void scaleByY() {
+        scaleByY(SCALE);
+    }
+
+    @FXML
+    public void reduceScaleByY() {
+        scaleByY(-SCALE);
+    }
+
+    @FXML
+    public void scaleByZ() {
+        scaleByZ(SCALE);
+    }
+
+    @FXML
+    public void reduceScaleByZ() {
+        scaleByZ(-SCALE);
+    }
+
+    @FXML
+    public void rotateAroundXUp() {
+        models.get(getSelectIndex(listOfModels)).setRotateXParam(ROTATE_PARAM);
+    }
+
+    @FXML
+    public void rotateAroundXDown() {
+        models.get(getSelectIndex(listOfModels)).setRotateXParam(-ROTATE_PARAM);
+    }
+
+    @FXML
+    public void rotateAroundYRight() {
+        models.get(getSelectIndex(listOfModels)).setRotateYParam(ROTATE_PARAM);
+    }
+
+    @FXML
+    public void rotateAroundYLeft() {
+        models.get(getSelectIndex(listOfModels)).setRotateYParam(-ROTATE_PARAM);
+    }
+
+    @FXML
+    public void rotateAroundZLeft() {
+        models.get(getSelectIndex(listOfModels)).setRotateZParam(ROTATE_PARAM);
+    }
+
+    @FXML
+    public void rotateAroundZRight() {
+        models.get(getSelectIndex(listOfModels)).setRotateZParam(-ROTATE_PARAM);
+    }
+
+    @FXML
+    public void translateXLeft() {
+        models.get(getSelectIndex(listOfModels)).setTranslateXParam(TRANSLATION);
+    }
+
+    @FXML
+    public void translateXRight() {
+        models.get(getSelectIndex(listOfModels)).setTranslateXParam(-TRANSLATION);
+    }
+
+    @FXML
+    public void translateYUp() {
+        models.get(getSelectIndex(listOfModels)).setTranslateYParam(TRANSLATION);
+    }
+
+    @FXML
+    public void translateYDown() {
+        models.get(getSelectIndex(listOfModels)).setTranslateYParam(-TRANSLATION);
+    }
+
+    @FXML
+    public void translateZForward() {
+        models.get(getSelectIndex(listOfModels)).setTranslateZParam(TRANSLATION);
+    }
+
+    @FXML
+    public void translateZBackward() {
+        models.get(getSelectIndex(listOfModels)).setTranslateZParam(-TRANSLATION);
+    }
+
 
     @FXML
     public void addScaleKey() {
