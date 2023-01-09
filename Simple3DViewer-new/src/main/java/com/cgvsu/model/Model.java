@@ -125,6 +125,7 @@ public class Model {
         return model;
     }
 
+
     public static ArrayList<Polygon> getTriangles(Model model) {
         ArrayList<Polygon> triangles = Polygon.triangulatePolygons(model.getPolygons());
         return triangles;

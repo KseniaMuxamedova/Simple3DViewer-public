@@ -150,6 +150,7 @@ else {
         double sx = actualModel.getVertices().get(s).getX();
         double sy = actualModel.getVertices().get(s).getY();
 
+
         double tx = actualModel.getVertices().get(t).getX();
         double ty = actualModel.getVertices().get(t).getY();
 

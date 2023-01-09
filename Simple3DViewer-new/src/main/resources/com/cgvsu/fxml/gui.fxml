@@ -74,7 +74,7 @@
             <MenuItem mnemonicParsing="false" onAction="#reduceScaleByY" text="Reduce Scale By Y"/>
             <MenuItem mnemonicParsing="false" onAction="#scaleByZ" text="Scale By Z"/>
             <MenuItem mnemonicParsing="false" onAction="#reduceScaleByZ" text="Reduce Scale By Z"/>
-            <MenuItem mnemonicParsing="false" onAction="#rotateAroundXUp" text="Rotate Up"/>
+            <MenuItem mnemonicParsing="false" onAction="#rotateAroundXUp" text="Rotate Up"/> 
             <MenuItem mnemonicParsing="false" onAction="#rotateAroundXDown" text="Rotate Down"/>
             <MenuItem mnemonicParsing="false" onAction="#rotateAroundYRight" text="Rotate Right"/>
             <MenuItem mnemonicParsing="false" onAction="#rotateAroundYLeft" text="Rotate Left"/>
