@@ -10,6 +10,8 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ColorPicker?>
+
 <AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController" styleClass="background">
     <MenuBar  styleClass="menuBackground">
         <Menu mnemonicParsing="false" text="File" styleClass="menu">
@@ -76,5 +78,8 @@
     <CheckBox fx:id="triangulation" layoutX="620.0" layoutY="3.0" mnemonicParsing="false" onAction="#triangulationModel"  text="Triangulate"  styleClass="check-box"/>
     <CheckBox fx:id="fillPolygons" layoutX="720.0" layoutY="3.0" mnemonicParsing="false" onAction="#FillingPolygons" text="Fill"  styleClass="check-box"/>
     <CheckBox fx:id="addLight" layoutX="775.0" layoutY="3.0" mnemonicParsing="false" onAction="#addLight" text="Light"  styleClass="check-box"/>
+    <CheckBox fx:id="keepMesh" layoutX="620.0" layoutY="30.0" mnemonicParsing="false" onAction="#keepMesh" text="Mesh"  styleClass="check-box"/>
+
+    <ColorPicker fx:id="modelColorPicker" layoutX="719.0" layoutY="30.0" />
 
 </AnchorPane>

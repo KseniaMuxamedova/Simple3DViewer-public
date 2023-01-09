@@ -1,6 +1,11 @@
 package com.cgvsu;
 
+import com.cgvsu.Rasterization.DrawUtilsJavaFX;
+import com.cgvsu.Rasterization.GraphicsUtils;
+import com.cgvsu.Rasterization.MyColor;
+import com.cgvsu.Rasterization.Rasterization;
 import com.cgvsu.math.Math.Vector.Vector3f;
+import com.cgvsu.model.Polygon;
 import com.cgvsu.model.TransformedModel;
 import com.cgvsu.objwriter.ObjWriter;
 import com.cgvsu.render_engine.RenderEngine;
@@ -13,12 +18,14 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -52,12 +59,19 @@ public class GuiController {
     @FXML
     private Canvas canvas;
 
+    @FXML
+    private  ColorPicker modelColorPicker;
+    private Color colorModel;
+
     private ArrayList<TransformedModel> models = new ArrayList<>();
     @FXML
     private ComboBox listOfModels;
     
     private boolean isTriangulate = false;
     private boolean isRasterize = false;
+
+    private boolean isKeepMesh = false;
+
     
     @FXML
     private CheckBox fillPolygons;
@@ -76,13 +90,28 @@ public class GuiController {
 
     private Timeline timeline;
 
+
+
     @FXML
     private void initialize() {
+
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
+        GraphicsUtils graphicsUtils = new DrawUtilsJavaFX(canvas);
+
+
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
+
+
+        modelColorPicker.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                colorModel = modelColorPicker.getValue();
+            }
+        });
+
 
         KeyFrame frame = new KeyFrame(Duration.millis(30), event -> {
             double width = canvas.getWidth();
@@ -93,11 +122,12 @@ public class GuiController {
 
 
             if (models != null) {
+
                 handleMouseActions();
                 listOfModels.setItems(FXCollections
                         .observableArrayList(listToArr(modelsNames)));
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, models,
-                        (int) width, (int) height, isRasterize);
+                        (int) width, (int) height, isRasterize , graphicsUtils, isKeepMesh, modelColorPicker);
             }
         });
         timeline.getKeyFrames().add(frame);
@@ -105,6 +135,8 @@ public class GuiController {
     }
 
     FileChooser fileChooser = new FileChooser();
+
+
 
     //возможность сохранить транс и не транс модели
     @FXML
@@ -183,11 +215,13 @@ public class GuiController {
     public void triangulationModel(){
             isTriangulate = !isTriangulate;
         Model.triangulate(models.get(getSelectIndex(listOfModels)).actualModel,isTriangulate);
-   
-
     }
     public void addLight(){
 
+    }
+
+    public void keepMesh(){
+        isKeepMesh = !isKeepMesh;
     }
 
     private void handleMouseActions() {
@@ -486,4 +520,6 @@ public class GuiController {
         checkSRGKeys(KeyCode.G);
         handleModelTranslation();
     }
+
+
 }

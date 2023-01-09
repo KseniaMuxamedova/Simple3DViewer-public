@@ -13,7 +13,7 @@ public abstract class Vector {
 
     protected float[] vector;
 
-    protected float x = 0, y = 0, z = 0;
+    public float x = 0, y = 0, z = 0;
 
     public Vector(float[] vector, final int size) {
         if (vector.length == size) {

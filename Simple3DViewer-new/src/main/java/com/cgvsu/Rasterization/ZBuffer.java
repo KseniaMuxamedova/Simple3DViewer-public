@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import javax.vecmath.Point2f;
-import javax.vecmath.Vector3f;
+import com.cgvsu.math.Math.Vector.Vector3f;
 import java.util.ArrayList;
 
 
@@ -32,7 +32,8 @@ public class ZBuffer {
     public void PutTriangle(Polygon triangle,
                             ArrayList<Vector3f> sceneVertexes,
                             ArrayList<Point2f> screenVertexes,
-                            Color colorTriangle) {
+                            Color colorTriangle)
+    {
         int[] x = new int[3];
         int[] y = new int[3];
         float[] z = new float[3];

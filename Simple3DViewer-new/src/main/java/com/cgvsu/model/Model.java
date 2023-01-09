@@ -12,6 +12,7 @@ public class Model {
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
     public ArrayList<Polygon> triangulatePolygons = new ArrayList<Polygon>();
+    ArrayList<ArrayList<Polygon>> triangles = new ArrayList<>();
 
     public Model(final ArrayList<Vector3f> vertices, final ArrayList<Vector2f> textureVertices, final ArrayList<Vector3f> normals, final ArrayList<Polygon> polygons) {
         this.vertices = vertices;
